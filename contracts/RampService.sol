@@ -13,7 +13,6 @@ contract RampService is AccessControl, ReentrancyGuard {
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    bytes32 public constant SUPER_ADMIN_ROLE = keccak256("SUPERADMIN_ROLE");
 
     /// @notice A record of signers
     mapping(address => bool) public signers;
@@ -54,7 +53,6 @@ contract RampService is AccessControl, ReentrancyGuard {
 
         _grantRole(OWNER_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
-        _grantRole(SUPER_ADMIN_ROLE,msg.sender);
         //solhint-disable-next-line no-inline-assembl
     }
 
@@ -63,25 +61,21 @@ contract RampService is AccessControl, ReentrancyGuard {
         _;
     }
 
-    function updateService() external {
+    function updateService() external onlyRole(OWNER_ROLE) {
         serviceActive = !serviceActive;
     }
 
-    function updateAsset(address asset) public {
+    function updateAsset(address asset) public onlyRole(ADMIN_ROLE) {
         supportedAssets[asset] = !supportedAssets[asset];
     }
 
-    function updateSigner(address signer) public {
+    function updateSigner(address signer) public onlyRole(OWNER_ROLE){
         signers[signer] = !signers[signer];
     }
 
-    function updateAddressBook(address _address) public onlyRole(SUPER_ADMIN_ROLE) {
+    function updateAddressBook(address _address) public onlyRole(OWNER_ROLE) {
 		addressBook[_address] = !addressBook[_address];
 	}
-
-    function updateSuperAdminRole(address multiwallet) public onlyRole(SUPER_ADMIN_ROLE){
-        _setupRole(SUPER_ADMIN_ROLE,multiwallet);
-    }
 
     function buy(
         address payable receiver,
@@ -159,7 +153,7 @@ contract RampService is AccessControl, ReentrancyGuard {
         address token,
         uint256 amount,
         address payable receiver
-    ) public onlyRole(SUPER_ADMIN_ROLE) returns (bool) {
+    ) public onlyRole(OWNER_ROLE) returns (bool) {
         require(receiver != address(0), "RampService: invalid query");
         require(
             addressBook[receiver],
@@ -187,16 +181,11 @@ contract RampService is AccessControl, ReentrancyGuard {
         return sent;
     }
 
-    function balance() public view returns (uint256) {
-        return address(this).balance;
-    }
-
     // address public router;
 
     // function setRoutrt(address router_) public {
     //     router = router_;
     // }
-
     function buyBySwap(
         address router,
         address receiver,
