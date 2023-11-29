@@ -4,21 +4,21 @@ module.exports = {
   networks: {
     mainnet: {
       // Don't put your private key here:
-      privateKey: '090a6cd0c9dd99e24b0df256f2889bd40ef25f3840babc22319eb061b993d883',
+      privateKey: '',
       userFeePercentage: 100,
       feeLimit: 1000 * 1e6,
       fullHost: 'https://api.trongrid.io',
       network_id: '1'
     },
     shasta: {
-      privateKey: '090a6cd0c9dd99e24b0df256f2889bd40ef25f3840babc22319eb061b993d883',
+      privateKey: '',
       userFeePercentage: 100,
       feeLimit: 1000 * 1e6,
       fullHost: 'https://api.shasta.trongrid.io',
       network_id: '2'
     },
     nile: {
-      privateKey: '090a6cd0c9dd99e24b0df256f2889bd40ef25f3840babc22319eb061b993d883',
+      privateKey: '',
       userFeePercentage: 100,
       feeLimit: 1000 * 1e6,
       fullHost: 'https://api.nileex.io',
